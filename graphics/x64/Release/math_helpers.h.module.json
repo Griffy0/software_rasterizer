@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Release\\math_helpers.h.obj",
+            "outputs": [
+                "C:\\Users\\jagri\\Documents\\work\\programming\\cpp\\graphics\\graphics\\x64\\Release\\vc143.pdb",
+                "x64\\Release\\",
+                "C:\\Users\\jagri\\Documents\\work\\programming\\cpp\\graphics\\graphics\\x64\\Release\\math_helpers.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "math_helpers.h",
+                    "source-path": "c:\\users\\jagri\\documents\\work\\programming\\cpp\\graphics\\graphics\\math_helpers.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}
