@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <deque>
 #include <SDL3/SDL.h>
-#include "bmp_gen.h"
 #include "graphic_structs.h"
 #include "vector_funcs.h"
 #include "render_funcs.h"

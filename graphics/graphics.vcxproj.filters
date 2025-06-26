@@ -36,9 +36,6 @@
     <ClCompile Include="fps_counter.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="bmp_gen.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="ppm_reader.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -61,12 +58,6 @@
     </ClInclude>
     <ClInclude Include="settings.h">
       <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_file.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bmp_gen.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ppm_reader.h">
       <Filter>Header Files</Filter>
