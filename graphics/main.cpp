@@ -71,10 +71,10 @@ int main(){
     load_bmp_24("texture.bmp", texture);
     cout << "Started!" << endl << "=========" << endl << endl;
     
-    // INIT LOOP
+    // INIT RUNTIME VARS
     SDL_Event e;
     bool running = true;
-    double max_runtime = 0;
+    double runtime = 0;
     float mouse_x;
     float mouse_y;
     vec3 mouse_pos;
@@ -82,7 +82,7 @@ int main(){
     float pull_strength = 300000.0f;
     
     // MAIN LOOP
-    while (running && max_runtime < 100) {
+    while (running && runtime < 100) {
         //Make this a check if running() func
         // Kill program when quit pressed
         while (SDL_PollEvent(&e)) {
@@ -118,7 +118,7 @@ int main(){
         render(render_storage, world, texture);
         present(render_storage);
         update_fps(frame_counter);
-        max_runtime += deltaTime;
+        runtime += deltaTime;
     };
     
     //cout << "Drawing" << endl;
