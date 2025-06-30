@@ -61,6 +61,11 @@ vec3 vec3::operator / (float scalar) const {
     return vec3{x / scalar, y / scalar, z / scalar};
 };
 
+RGBA RGBA::operator - (float scalar){
+    //uint8_t sub = static_cast<uint8_t>(scalar);
+    return RGBA {static_cast<uint8_t>(max(r-scalar, 0.0f)), static_cast<uint8_t>(max(g-scalar, 0.0f)), static_cast<uint8_t>(max(b-scalar, 0.0f)), a};
+};
+
 /*void tri::order(){
     vec2 point_2=b; 
     vec2 point_3=c;

@@ -6,8 +6,6 @@
 #include "settings.h"
 #include <SDL3/SDL.h>
 
-const float FRUSTRUM_DEPTH = 3000;
-
 vector<tri3> get_tris(Object obj){
     //Use tail end recursion to get all children
     vector<tri3> converted_coords;
@@ -112,6 +110,7 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
         float max_x = max_bound_x(current_tri);
         float y;
         float x;
+        float depth_percent;
         tri& base_tri = uvs[i];
         for (y=min_y;y<=max_y;++y){
             for (x=min_x;x<=max_x;++x){
@@ -123,10 +122,12 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
                     //If new depth is closer to camera than old depth then overwrite old depth and colour
                     buffer_depth = &depth_buffer->depth(static_cast<size_t>(x), static_cast<size_t>(y));
                     if ((FRUSTRUM_DEPTH - depth) > *buffer_depth){
+                        depth_percent = depth/FRUSTRUM_DEPTH;
+                        //cout << depth_percent << endl;
                         *buffer_depth = FRUSTRUM_DEPTH - depth;
                         vec2 texture_coordinate = barycentric_to_uv(barycentric_coords, base_tri);
                         RGBA colour = default_texture.el(rescale_int(texture_coordinate.x, 1, TEXTURE_WIDTH), rescale_int(texture_coordinate.y, 1, TEXTURE_HEIGHT));
-                        image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour;
+                        image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour - (depth_percent*255.0f);
                     };
                 };
             };

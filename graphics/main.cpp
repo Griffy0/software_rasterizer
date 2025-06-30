@@ -62,13 +62,13 @@ int main(){
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
     cout << "Generating Cubes" << endl;
-    int num_cubes = randint(3,10);
+    int num_cubes = randint(3,4);
     for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 1600)}, (float) (randint(75,200)/100.0f));
+        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f));
     };
     cout << "Converting Texture" << endl;
     Texture texture;
-    load_bmp_24("texture.bmp", texture);
+    load_bmp_24("texture2.bmp", texture);
     cout << "Started!" << endl << "=========" << endl << endl;
     
     // INIT RUNTIME VARS
