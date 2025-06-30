@@ -5,8 +5,8 @@
 #include <iostream>
 
 bool load_bmp_24(const char* filename, Texture& out_texture) {
-    constexpr int width = TEXTURE_WIDTH;
-    constexpr int height = TEXTURE_HEIGHT;
+    //constexpr int width = TEXTURE_WIDTH;
+    //constexpr int height = TEXTURE_HEIGHT;
 
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
@@ -26,24 +26,27 @@ bool load_bmp_24(const char* filename, Texture& out_texture) {
     int16_t bpp        = *reinterpret_cast<int16_t*>(&header[28]);
     uint32_t offset    = *reinterpret_cast<uint32_t*>(&header[10]);
 
-    if (bmp_width != width || bmp_height != height || bpp != 24) {
-        std::cerr << "Unsupported BMP format (must be 32x48, 24-bit).\n";
-        return false;
-    }
+    // if (bmp_width != width || bmp_height != height || bpp != 24) {
+    //    std::cerr << "Unsupported BMP format (must be 32x48, 24-bit).\n";
+    //    return false;
+    //}
+    out_texture.height = bmp_height;
+    out_texture.width = bmp_width;
+    out_texture.coordinate = new RGBA[bmp_height*bmp_width];
 
     file.seekg(offset, std::ios::beg);
 
-    const int row_size = ((width * 3 + 3) / 4) * 4;
-    uint8_t row[row_size];
+    const int row_size = ((bmp_width * 3 + 3) / 4) * 4;
+    std::vector<uint8_t> row(row_size);
 
-    for (int y = 0; y < height; ++y) {
-        file.read(reinterpret_cast<char*>(row), row_size);
-        for (int x = 0; x < width; ++x) {
+    for (int y = 0; y < bmp_height; ++y) {
+        file.read(reinterpret_cast<char*>(row.data()), row_size);
+        for (int x = 0; x < bmp_width; ++x) {
             int src_index = x * 3;
             int dst_x = x;
-            int dst_y = height - 1 - y;
+            int dst_y = bmp_height - 1 - y;
 
-            out_texture.coordinate[dst_y * width + dst_x] = {
+            out_texture.coordinate[dst_y * bmp_width + dst_x] = {
                 row[src_index + 2], // R
                 row[src_index + 1], // G
                 row[src_index + 0], // B

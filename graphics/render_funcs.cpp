@@ -100,6 +100,9 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
     vec3 barycentric_coords;
     float depth;
     float *buffer_depth;
+    uint16_t width = default_texture.width;
+    uint16_t height = default_texture.height;
+
     for (int i=0; i<num_tris; i++) {
         tri3& current_tri = tris[i];
         //If not back-face of tri
@@ -119,14 +122,13 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
                     //Calc depth using barycentric interpolation
                     barycentric_coords = to_barycentric(vec2{x+0.5f,y+0.5f}, current_tri);
                     depth = (barycentric_coords.x * current_tri.a.z) + (barycentric_coords.y * current_tri.b.z) + (barycentric_coords.z * current_tri.c.z);
-                    //If new depth is closer to camera than old depth then overwrite old depth and colour
+                    //If new depth is closer to camera than the old depth, overwrite old depth and colour
                     buffer_depth = &depth_buffer->depth(static_cast<size_t>(x), static_cast<size_t>(y));
                     if ((FRUSTRUM_DEPTH - depth) > *buffer_depth){
                         depth_percent = depth/FRUSTRUM_DEPTH;
-                        //cout << depth_percent << endl;
                         *buffer_depth = FRUSTRUM_DEPTH - depth;
                         vec2 texture_coordinate = barycentric_to_uv(barycentric_coords, base_tri);
-                        RGBA colour = default_texture.el(rescale_int(texture_coordinate.x, 1, TEXTURE_WIDTH), rescale_int(texture_coordinate.y, 1, TEXTURE_HEIGHT));
+                        RGBA colour = default_texture.el(rescale_int(texture_coordinate.x, 1, width), rescale_int(texture_coordinate.y, 1, height));
                         image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour - (depth_percent*255.0f);
                     };
                 };

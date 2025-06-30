@@ -21,10 +21,12 @@ deque<Object> world;
 double deltaTime = 0;
 
 void move_helper(Object& obj){
+    //Spin based on current velo
     rotate_z(obj.rb.velocity.z*deltaTime, obj.ObjectSpace);
     rotate_y(obj.rb.velocity.y*deltaTime, obj.ObjectSpace);
     rotate_x(obj.rb.velocity.x*deltaTime, obj.ObjectSpace);
     
+    //If on window border, bounce
     if (obj.pos.x > WIDTH)  obj.rb.velocity.x = abs(obj.rb.velocity.x) * -1;
     if (obj.pos.x < 0)      obj.rb.velocity.x = abs(obj.rb.velocity.x);
     if (obj.pos.y > HEIGHT) obj.rb.velocity.y = abs(obj.rb.velocity.y) * -1;
@@ -47,9 +49,10 @@ void update_physics(){
     };
 };
 
-void add_cube(vec3 pos, float size){
+void add_cube(vec3 pos, float size, Texture* texture){
     world.push_back(Object(pos, cube, cube_uvs));
     world.back().ObjectSpace = scale(size, world.back().ObjectSpace);
+    world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
     world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
 };
@@ -61,14 +64,14 @@ int main(){
     Performance frame_counter = Performance();
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
-    cout << "Generating Cubes" << endl;
-    int num_cubes = randint(3,4);
-    for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f));
-    };
     cout << "Converting Texture" << endl;
     Texture texture;
     load_bmp_24("texture2.bmp", texture);
+    cout << "Generating Cubes" << endl;
+    int num_cubes = randint(3,4);
+    for (int i=0;i<num_cubes;i++){
+        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), &texture);
+    };
     cout << "Started!" << endl << "=========" << endl << endl;
     
     // INIT RUNTIME VARS

@@ -56,8 +56,10 @@ class tri {
 };
 
 struct Texture {
-    alignas(32) RGBA coordinate[TEXTURE_WIDTH*TEXTURE_HEIGHT]; 
-    RGBA el(int w, int h) { return coordinate[h * TEXTURE_WIDTH + w]; };
+    uint16_t height;
+    uint16_t width;
+    RGBA* coordinate; 
+    RGBA el(int w, int h) { return coordinate[h * width + w]; };
 };
 
 struct tri3 {
@@ -78,6 +80,9 @@ struct TriangleMesh{
     int tri_count;
     TriIndices *tri_indices;*/
     vector<tri3> tris;
+    vector<tri> uvs;
+    Texture* texture;
+    
 };
 
 struct UVMesh{
