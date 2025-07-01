@@ -1,10 +1,11 @@
-#include "ppm_reader.h"
+#include "bmp_reader.h"
 #include "settings.h"
 #include "graphic_structs.h"#include <fstream>
 #include <cstdint>
 #include <iostream>
+#include <map>
 
-bool load_bmp_24(const char* filename, Texture& out_texture) {
+bool load_bmp_24(const char* filename, Texture* out_texture) {
     //constexpr int width = TEXTURE_WIDTH;
     //constexpr int height = TEXTURE_HEIGHT;
 
@@ -30,9 +31,9 @@ bool load_bmp_24(const char* filename, Texture& out_texture) {
     //    std::cerr << "Unsupported BMP format (must be 32x48, 24-bit).\n";
     //    return false;
     //}
-    out_texture.height = bmp_height;
-    out_texture.width = bmp_width;
-    out_texture.coordinate = new RGBA[bmp_height*bmp_width];
+    out_texture->height = bmp_height;
+    out_texture->width = bmp_width;
+    out_texture->coordinate = new RGBA[bmp_height*bmp_width];
 
     file.seekg(offset, std::ios::beg);
 
@@ -46,7 +47,7 @@ bool load_bmp_24(const char* filename, Texture& out_texture) {
             int dst_x = x;
             int dst_y = bmp_height - 1 - y;
 
-            out_texture.coordinate[dst_y * bmp_width + dst_x] = {
+            out_texture->coordinate[dst_y * bmp_width + dst_x] = {
                 row[src_index + 2], // R
                 row[src_index + 1], // G
                 row[src_index + 0], // B

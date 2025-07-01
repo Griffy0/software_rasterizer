@@ -139,7 +139,7 @@ class Object {
         vector<Object> children;
         vector<Component> components;
         Rigidbody rb;
-        Object(vec3 position, TriangleMesh tri_mesh = {vector<tri3>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
+        Object(vec3 position, TriangleMesh tri_mesh = {vector<tri3>(), vector<tri>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
 };
 
 struct SDL_RenderPackage {

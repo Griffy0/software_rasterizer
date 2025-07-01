@@ -6,4 +6,4 @@
 #include <cstdint>
 #include <string>
 
-bool load_bmp_24(const char* filename, Texture& out_texture);
+bool load_bmp_24(const char* filename, Texture* out_texture);

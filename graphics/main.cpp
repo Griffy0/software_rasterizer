@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <cstddef>
 #include <deque>
+#include <map>
+#include <filesystem>
 #include <SDL3/SDL.h>
 #include "graphic_structs.h"
 #include "vector_funcs.h"
@@ -12,9 +14,10 @@
 #include "math_helpers.h"
 #include "useful_template_structs.h"
 #include "fps_counter.h"
-#include "ppm_reader.h"
+#include "bmp_reader.h"
 #include "settings.h"
 using namespace std;
+using namespace std::filesystem;
 
 vector<Object*> physics_objects;
 deque<Object> world;
@@ -50,11 +53,41 @@ void update_physics(){
 };
 
 void add_cube(vec3 pos, float size, Texture* texture){
-    world.push_back(Object(pos, cube, cube_uvs));
+    world.push_back(Object(pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
     world.back().ObjectSpace = scale(size, world.back().ObjectSpace);
     world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
     world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
+};
+
+map<string, Texture*> load_textures(){
+    map<string, Texture*> texture_map;
+    string texture_name;
+    path directorypath = "textures";
+    string filename;
+    string extension;
+    // To check if the directory exists or not
+    if (exists(directorypath)
+        && is_directory(directorypath)) {
+        // Loop through each item (file or subdirectory) in
+        // the directory
+        for (const auto& entry : directory_iterator(directorypath)) {
+            
+            if (entry.path().extension().string() == ".bmp"){
+                filename = entry.path().stem().string();
+                //texture_name = "texture2";
+                texture_map[filename] = new Texture;
+                load_bmp_24("textures\\texture2.bmp", texture_map[filename]);
+    
+                cout << "Loaded: " << filename << endl;
+            };            
+        }
+    }
+    else {
+        // Handle the case where the directory doesn't exist
+        cerr << "Texture directory not found." << endl;
+    }
+    return texture_map;
 };
 
 int main(){
@@ -64,13 +97,14 @@ int main(){
     Performance frame_counter = Performance();
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
-    cout << "Converting Texture" << endl;
-    Texture texture;
-    load_bmp_24("texture2.bmp", texture);
+    cout << "Converting Textures" << endl;
+    map<string, Texture*> texture_map = load_textures();
+
+    cout << (int) texture_map["texture2"]->el(0,0).r << endl;
     cout << "Generating Cubes" << endl;
     int num_cubes = randint(3,4);
     for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), &texture);
+        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["exture2"]);
     };
     cout << "Started!" << endl << "=========" << endl << endl;
     
@@ -118,7 +152,7 @@ int main(){
         };
 
         // RENDER CODE
-        render(render_storage, world, texture);
+        render(render_storage, world, * texture_map["texture2"]);
         present(render_storage);
         update_fps(frame_counter);
         runtime += deltaTime;

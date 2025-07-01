@@ -2,18 +2,19 @@
 #include "graphic_structs.h"
 
 Matrix_3x3 identity3x3 = {1,0,0, 0,1,0, 0,0,1};
-/*
-Texture* default_texture = new Texture ();
-default_texture.coordinate = {RGBA{0,0,255, 255}, RGBA{255,0,0, 255}, RGBA{255, 0, 0, 255},
-    RGBA{255,0,0, 255}, RGBA{0,0,255, 255}, RGBA{0, 0, 255, 255},
-    RGBA{0,0,255, 255}, RGBA{255,0,0, 255}, RGBA{255, 0, 0, 255}
-}*/
 
+Texture default_texture = {3, 3, new RGBA[9]{
+    RGBA{0,0,255, 255}, RGBA{255,0,0, 255}, RGBA{255, 0, 0, 255},
+    RGBA{255,0,0, 255}, RGBA{0,0,255, 255}, RGBA{0, 0, 255, 255},
+    RGBA{0,0,255, 255}, RGBA{255,0,0, 255}, RGBA{255, 0, 0, 255}}
+};
+/*
 TriangleMesh triangle_mesh = {{
     tri3{
         vec3{-50, 50, 1}, 
         vec3{50, -50, 1}, 
-        vec3{-50, -50, 1}}}};
+        vec3{-50, -50, 1}}},
+    default_texture};
 
 TriangleMesh square = {{
     // Front
@@ -31,7 +32,7 @@ UVMesh square_uvs = {{
     // Front
     tri{vec2{0,0},vec2{1,0},vec2{0,1}}, 
     tri{vec2{0,1},vec2{1,0},vec2{1,1}}}};
-
+*/
 
 TriangleMesh cube = {
     {
@@ -119,7 +120,8 @@ TriangleMesh cube = {
         // Left
         tri{vec2{0.5f,0.67f},vec2{1,0.67f},vec2{0.5f,1}}, 
         tri{vec2{0.5f,1},vec2{1,0.67f},vec2{1,1}}
-    }
+    },
+    &default_texture
 };
 
 UVMesh cube_uvs = {{

@@ -146,14 +146,14 @@
     </ClCompile>
     <ClCompile Include="math_helpers.cpp" />
     <ClCompile Include="math_helpers.h" />
-    <ClCompile Include="ppm_reader.cpp" />
+    <ClCompile Include="bmp_reader.cpp" />
     <ClCompile Include="render_funcs.cpp" />
     <ClCompile Include="vector_funcs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fps_counter.h" />
     <ClInclude Include="graphic_structs.h" />
-    <ClInclude Include="ppm_reader.h" />
+    <ClInclude Include="bmp_reader.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="useful_template_structs.h" />
     <ClInclude Include="render_funcs.h" />
