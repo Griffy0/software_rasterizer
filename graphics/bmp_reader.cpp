@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+#include <filesystem>
+using namespace std::filesystem;
+
 
 bool load_bmp_24(const char* filename, Texture* out_texture) {
     //constexpr int width = TEXTURE_WIDTH;
@@ -57,4 +60,34 @@ bool load_bmp_24(const char* filename, Texture* out_texture) {
     }
 
     return true;
-}
+};
+
+map<string, Texture*> load_textures(){
+    map<string, Texture*> texture_map;
+    string texture_name;
+    path directorypath = "textures";
+    string filename;
+    string extension;
+    // To check if the directory exists or not
+    if (exists(directorypath)
+        && is_directory(directorypath)) {
+        // Loop through each item (file or subdirectory) in
+        // the directory
+        for (const auto& entry : directory_iterator(directorypath)) {
+            
+            if (entry.path().extension().string() == ".bmp"){
+                filename = entry.path().stem().string();
+                //texture_name = "texture2";
+                texture_map[filename] = new Texture;
+                load_bmp_24("textures\\texture2.bmp", texture_map[filename]);
+    
+                cout << "Loaded: " << filename << endl;
+            };            
+        }
+    }
+    else {
+        // Handle the case where the directory doesn't exist
+        cerr << "Texture directory not found." << endl;
+    }
+    return texture_map;
+};

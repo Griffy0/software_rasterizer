@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <deque>
 #include <map>
-#include <filesystem>
 #include <SDL3/SDL.h>
 #include "graphic_structs.h"
 #include "vector_funcs.h"
@@ -17,7 +16,6 @@
 #include "bmp_reader.h"
 #include "settings.h"
 using namespace std;
-using namespace std::filesystem;
 
 vector<Object*> physics_objects;
 deque<Object> world;
@@ -58,36 +56,6 @@ void add_cube(vec3 pos, float size, Texture* texture){
     world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
     world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
-};
-
-map<string, Texture*> load_textures(){
-    map<string, Texture*> texture_map;
-    string texture_name;
-    path directorypath = "textures";
-    string filename;
-    string extension;
-    // To check if the directory exists or not
-    if (exists(directorypath)
-        && is_directory(directorypath)) {
-        // Loop through each item (file or subdirectory) in
-        // the directory
-        for (const auto& entry : directory_iterator(directorypath)) {
-            
-            if (entry.path().extension().string() == ".bmp"){
-                filename = entry.path().stem().string();
-                //texture_name = "texture2";
-                texture_map[filename] = new Texture;
-                load_bmp_24("textures\\texture2.bmp", texture_map[filename]);
-    
-                cout << "Loaded: " << filename << endl;
-            };            
-        }
-    }
-    else {
-        // Handle the case where the directory doesn't exist
-        cerr << "Texture directory not found." << endl;
-    }
-    return texture_map;
 };
 
 int main(){
