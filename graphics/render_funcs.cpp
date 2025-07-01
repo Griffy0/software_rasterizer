@@ -6,17 +6,23 @@
 #include "settings.h"
 #include <SDL3/SDL.h>
 
-vector<tri3> get_tris(Object obj){
+vector<RenderTri> get_tris(Object obj){
     //Use tail end recursion to get all children
-    vector<tri3> converted_coords;
-    vector<tri3> results;
-    if (obj.mesh.tris.size() > 0){
-        for (tri3 i : obj.mesh.tris){
+    vector<RenderTri> converted_coords;
+    vector<RenderTri> results;
+    uint16_t size = obj.mesh.tris.size();
+    if (size > 0){
+        for (int i=0;i<size;i++){
+            //RenderTri i : obj.mesh.tris
             //mul x y z by the obj coordinate space matrix
             converted_coords.push_back(
-                tri3{add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, i.a), obj.pos),
-                    add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, i.b), obj.pos),
-                    add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, i.c), obj.pos)
+                RenderTri{
+                    tri3{add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].a), obj.pos),
+                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].b), obj.pos),
+                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].c), obj.pos)
+                    },
+                    obj.mesh.uvs[i],
+                    obj.mesh.texture
                 }
             );
         };
@@ -32,20 +38,18 @@ vector<tri3> get_tris(Object obj){
     return converted_coords;
 };
 
-vector<tri3> convert_tris(deque<Object> world){
-    vector<tri3> to_render;
-    vector<tri3> results;
+vector<RenderTri> convert_tris(deque<Object> world){
+    vector<RenderTri> to_render;
+    vector<RenderTri> results;
     for (Object obj : world){
         results = get_tris(obj);
         //Convert all to screenspace
-        for (tri3 triangle : results){
-            to_render.push_back(
-                tri3{
-                    project_to_screen(triangle.a),
-                    project_to_screen(triangle.b),
-                    project_to_screen(triangle.c)
-                });
+        for (RenderTri& triangle : results){
+            triangle.vertices.a = project_to_screen(triangle.vertices.a);
+            triangle.vertices.b = project_to_screen(triangle.vertices.b);
+            triangle.vertices.c = project_to_screen(triangle.vertices.c);
         };
+        to_render.insert(to_render.end(), results.begin(), results.end());
     };
     return to_render;
 };
@@ -96,15 +100,13 @@ float max_bound_y(tri3& triangle){
     return ceil(min(max(max(triangle.a.y,triangle.b.y), triangle.c.y), (float) WIDTH-1));
 };
 
-void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image, DepthBuffer* depth_buffer, SDL_Renderer *renderer, Texture& default_texture){
+void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer* depth_buffer, SDL_Renderer *renderer){
     vec3 barycentric_coords;
     float depth;
     float *buffer_depth;
-    uint16_t width = default_texture.width;
-    uint16_t height = default_texture.height;
 
     for (int i=0; i<num_tris; i++) {
-        tri3& current_tri = tris[i];
+        tri3& current_tri = tris[i].vertices;
         //If not back-face of tri
         if (cross_product_3_vectors(current_tri.a, current_tri.b, current_tri.c) <= 0) continue;
         float min_y = min_bound_y(current_tri);
@@ -114,7 +116,9 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
         float y;
         float x;
         float depth_percent;
-        tri& base_tri = uvs[i];
+        tri& base_tri = tris[i].uv_tri;
+        uint16_t width = tris[i].texture->width;
+        uint16_t height = tris[i].texture->height;
         for (y=min_y;y<=max_y;++y){
             for (x=min_x;x<=max_x;++x){
                 //If pixel in tri
@@ -128,7 +132,7 @@ void render_tris(vector<tri3> tris, vector<tri> uvs, int num_tris, Image* image,
                         depth_percent = depth/FRUSTRUM_DEPTH;
                         *buffer_depth = FRUSTRUM_DEPTH - depth;
                         vec2 texture_coordinate = barycentric_to_uv(barycentric_coords, base_tri);
-                        RGBA colour = default_texture.el(rescale_int(texture_coordinate.x, 1, width), rescale_int(texture_coordinate.y, 1, height));
+                        RGBA colour = tris[i].texture->el(rescale_int(texture_coordinate.x, 1, width), rescale_int(texture_coordinate.y, 1, height));
                         image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour - (depth_percent*255.0f);
                     };
                 };
@@ -180,16 +184,9 @@ void render(const SDL_RenderPackage& render_storage, deque<Object>& objects, Tex
     black_buffer(render_storage.depth_buffer);
     if (objects.size() > 0){
         //Get list of tris to render
-        vector<tri3> to_render = convert_tris(objects);
-        //Get list of texture UV's
-        vector<tri> uvs;
-        vector<tri> uv_results;
-        for (Object obj : objects){
-            uv_results = get_uvs(obj);
-            uvs.insert(uvs.end(), uv_results.begin(), uv_results.end());
-        };
+        vector<RenderTri> to_render = convert_tris(objects);
         //Draw to screen
-        render_tris(to_render, uvs, to_render.size(), render_storage.image, render_storage.depth_buffer, render_storage.renderer, default_texture);   
+        render_tris(to_render, to_render.size(), render_storage.image, render_storage.depth_buffer, render_storage.renderer);   
     };
 };
 

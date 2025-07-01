@@ -79,7 +79,7 @@ map<string, Texture*> load_textures(){
                 filename = entry.path().stem().string();
                 //texture_name = "texture2";
                 texture_map[filename] = new Texture;
-                load_bmp_24("textures\\texture2.bmp", texture_map[filename]);
+                load_bmp_24(entry.path().string().c_str(), texture_map[filename]);
     
                 cout << "Loaded: " << filename << endl;
             };            

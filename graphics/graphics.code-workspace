@@ -72,7 +72,8 @@
 			"unordered_map": "cpp",
 			"xhash": "cpp",
 			"map": "cpp",
-			"filesystem": "cpp"
+			"filesystem": "cpp",
+			"xtree": "cpp"
 		}
 	}
 }

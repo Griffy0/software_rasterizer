@@ -85,6 +85,12 @@ struct TriangleMesh{
     
 };
 
+struct RenderTri{
+    tri3 vertices;
+    tri uv_tri;
+    Texture* texture;
+};
+
 struct UVMesh{
     vector<tri> uvs;
 };

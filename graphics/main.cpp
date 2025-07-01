@@ -70,10 +70,13 @@ int main(){
 
     cout << (int) texture_map["texture2"]->el(0,0).r << endl;
     cout << "Generating Cubes" << endl;
-    int num_cubes = randint(3,4);
+    int num_cubes = randint(3,3);
     for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["exture2"]);
+        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["texture2"]);
     };
+    add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["default_texture"]);
+    cout << (int) texture_map["default_texture"]->el(0,0).g << endl;
+
     cout << "Started!" << endl << "=========" << endl << endl;
     
     // INIT RUNTIME VARS
@@ -120,7 +123,7 @@ int main(){
         };
 
         // RENDER CODE
-        render(render_storage, world, * texture_map["texture2"]);
+        render(render_storage, world, *texture_map["texture2"]);
         present(render_storage);
         update_fps(frame_counter);
         runtime += deltaTime;
