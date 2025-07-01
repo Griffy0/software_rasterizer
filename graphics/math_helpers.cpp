@@ -1,4 +1,4 @@
-#include "math_helpers.h"
+#include "math_helpers.hpp"
 #include <random>
 #include <cmath>
 #include <algorithm>

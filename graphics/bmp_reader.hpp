@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic_structs.h"
+#include "graphic_structs.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>

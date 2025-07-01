@@ -2,8 +2,8 @@
 #include <string>
 #include <cstdint>
 #include <cstddef>
-#include "graphic_structs.h"
-#include "math_helpers.h"
+#include "graphic_structs.hpp"
+#include "math_helpers.hpp"
 using namespace std;
 
 template <class arr_type>

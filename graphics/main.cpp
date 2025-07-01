@@ -7,14 +7,14 @@
 #include <deque>
 #include <map>
 #include <SDL3/SDL.h>
-#include "graphic_structs.h"
-#include "vector_funcs.h"
-#include "render_funcs.h"
-#include "math_helpers.h"
-#include "useful_template_structs.h"
-#include "fps_counter.h"
-#include "bmp_reader.h"
-#include "settings.h"
+#include "graphic_structs.hpp"
+#include "vector_funcs.hpp"
+#include "render_funcs.hpp"
+#include "math_helpers.hpp"
+#include "useful_template_structs.hpp"
+#include "fps_counter.hpp"
+#include "bmp_reader.hpp"
+#include "settings.hpp"
 using namespace std;
 
 vector<Object*> physics_objects;
@@ -61,21 +61,21 @@ void add_cube(vec3 pos, float size, Texture* texture){
 int main(){
     cout << "Creating render vars" << endl;
     SDL_RenderPackage render_storage = SDL_Init_Main();
+
     cout << "Initialising FPSMeter" << endl;
     Performance frame_counter = Performance();
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
+
     cout << "Converting Textures" << endl;
     map<string, Texture*> texture_map = load_textures();
 
-    cout << (int) texture_map["texture2"]->el(0,0).r << endl;
     cout << "Generating Cubes" << endl;
     int num_cubes = randint(3,3);
     for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["texture2"]);
+        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["texture"]);
     };
     add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["default_texture"]);
-    cout << (int) texture_map["default_texture"]->el(0,0).g << endl;
 
     cout << "Started!" << endl << "=========" << endl << endl;
     
@@ -101,9 +101,9 @@ int main(){
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
         deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
-        SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+        //SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         //mouse_pos.x = WIDTH - mouse_pos.x * 0.5f;
-        mouse_pos.y = HEIGHT - mouse_pos.y;
+        //mouse_pos.y = HEIGHT - mouse_pos.y;
 
         //cout << mouse_pos.y << endl;
 
@@ -123,7 +123,7 @@ int main(){
         };
 
         // RENDER CODE
-        render(render_storage, world, *texture_map["texture2"]);
+        render(render_storage, world);
         present(render_storage);
         update_fps(frame_counter);
         runtime += deltaTime;

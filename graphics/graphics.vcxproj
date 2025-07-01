@@ -145,19 +145,19 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Full</Optimization>
     </ClCompile>
     <ClCompile Include="math_helpers.cpp" />
-    <ClCompile Include="math_helpers.h" />
+    <ClCompile Include="math_helpers.hpp" />
     <ClCompile Include="bmp_reader.cpp" />
     <ClCompile Include="render_funcs.cpp" />
     <ClCompile Include="vector_funcs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fps_counter.h" />
-    <ClInclude Include="graphic_structs.h" />
-    <ClInclude Include="bmp_reader.h" />
-    <ClInclude Include="settings.h" />
-    <ClInclude Include="useful_template_structs.h" />
-    <ClInclude Include="render_funcs.h" />
-    <ClInclude Include="vector_funcs.h" />
+    <ClInclude Include="fps_counter.hpp" />
+    <ClInclude Include="graphic_structs.hpp" />
+    <ClInclude Include="bmp_reader.hpp" />
+    <ClInclude Include="settings.hpp" />
+    <ClInclude Include="useful_template_structs.hpp" />
+    <ClInclude Include="render_funcs.hpp" />
+    <ClInclude Include="vector_funcs.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

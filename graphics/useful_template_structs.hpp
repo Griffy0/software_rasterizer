@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic_structs.h"
+#include "graphic_structs.hpp"
 
 Matrix_3x3 identity3x3 = {1,0,0, 0,1,0, 0,0,1};
 

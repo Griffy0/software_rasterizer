@@ -1,7 +1,7 @@
 #include <string>
-#include "graphic_structs.h"
-#include "vector_funcs.h"
-#include "settings.h"
+#include "graphic_structs.hpp"
+#include "vector_funcs.hpp"
+#include "settings.hpp"
 using namespace std;
 
 vec2::operator string() const {
@@ -64,6 +64,11 @@ vec3 vec3::operator / (float scalar) const {
 RGBA RGBA::operator - (float scalar){
     //uint8_t sub = static_cast<uint8_t>(scalar);
     return RGBA {static_cast<uint8_t>(max(r-scalar, 0.0f)), static_cast<uint8_t>(max(g-scalar, 0.0f)), static_cast<uint8_t>(max(b-scalar, 0.0f)), a};
+};
+
+RGBA RGBA::operator * (float scalar){
+    //uint8_t sub = static_cast<uint8_t>(scalar);
+    return RGBA {static_cast<uint8_t>(r*scalar), static_cast<uint8_t>(g*scalar), static_cast<uint8_t>(b*scalar), a};
 };
 
 /*void tri::order(){

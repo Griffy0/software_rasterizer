@@ -1,6 +1,7 @@
-#include "bmp_reader.h"
-#include "settings.h"
-#include "graphic_structs.h"#include <fstream>
+#include "bmp_reader.hpp"
+#include "settings.hpp"
+#include "graphic_structs.hpp"
+#include <fstream>
 #include <cstdint>
 #include <iostream>
 #include <map>

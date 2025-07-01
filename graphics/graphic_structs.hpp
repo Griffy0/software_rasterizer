@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 #include <SDL3/SDL.h>
-#include "settings.h"
+#include "settings.hpp"
 using namespace std;
 
 class vec2 {
@@ -43,6 +43,7 @@ struct RGBA {
     uint8_t b;    
     uint8_t a;
     RGBA operator - (float scalar);
+    RGBA operator * (float scalar);
 };
 
 class tri {

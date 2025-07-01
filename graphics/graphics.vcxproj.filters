@@ -24,7 +24,7 @@
     <ClCompile Include="vector_funcs.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="math_helpers.h">
+    <ClCompile Include="math_helpers.hpp">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="math_helpers.cpp">
@@ -41,25 +41,25 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graphic_structs.h">
+    <ClInclude Include="graphic_structs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector_funcs.h">
+    <ClInclude Include="vector_funcs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_funcs.h">
+    <ClInclude Include="render_funcs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="useful_template_structs.h">
+    <ClInclude Include="useful_template_structs.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="fps_counter.h">
+    <ClInclude Include="fps_counter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="settings.h">
+    <ClInclude Include="settings.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="bmp_reader.h">
+    <ClInclude Include="bmp_reader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

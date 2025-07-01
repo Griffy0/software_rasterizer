@@ -1,7 +1,7 @@
 #include <SDL3/SDL.h>
 #include <iostream> //cout
 #include <fstream> //endl
-#include "fps_counter.h"
+#include "fps_counter.hpp"
 
 Performance::Performance(){
     startTime = SDL_GetPerformanceCounter();
