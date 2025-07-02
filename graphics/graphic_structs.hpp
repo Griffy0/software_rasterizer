@@ -13,6 +13,8 @@ class vec2 {
         float y;
         operator string() const;
         void normalise();
+        vec2 operator * (float scalar) const;
+        vec2 operator / (float scalar) const;
 };
 
 struct vec3 {

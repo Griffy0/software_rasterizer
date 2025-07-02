@@ -28,9 +28,9 @@ void move_helper(Object& obj){
     rotate_x(obj.rb.velocity.x*deltaTime, obj.ObjectSpace);
     
     //If on window border, bounce
-    if (obj.pos.x > 10)  obj.rb.velocity.x = abs(obj.rb.velocity.x) * -1;
+    if (obj.pos.x > 10)     obj.rb.velocity.x = abs(obj.rb.velocity.x) * -1;
     if (obj.pos.x < 0)      obj.rb.velocity.x = abs(obj.rb.velocity.x);
-    if (obj.pos.y > 10) obj.rb.velocity.y = abs(obj.rb.velocity.y) * -1;
+    if (obj.pos.y > 10)     obj.rb.velocity.y = abs(obj.rb.velocity.y) * -1;
     if (obj.pos.y < 0)      obj.rb.velocity.y = abs(obj.rb.velocity.y);
 };
 

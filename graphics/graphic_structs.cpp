@@ -18,6 +18,16 @@ void vec2::normalise(){
     y /= euclid_norm;
 };
 
+vec2 vec2::operator * (float scalar) const {
+    return vec2{x * scalar, y * scalar};
+};
+
+
+vec2 vec2::operator / (float scalar) const {
+    return vec2{x / scalar, y / scalar};
+};
+
+
 void vec3::normalise(){
     float euclid_norm = static_cast<float>(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
     x /= euclid_norm;

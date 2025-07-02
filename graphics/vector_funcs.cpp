@@ -95,7 +95,7 @@ vec3 clip_to_screen(float x, float y, float z, float w){
     float screen_x = ((x * WIDTH) / (2*w)) + WIDTH/2;
     float screen_y = ((y * HEIGHT) / (2*w)) + HEIGHT/2;
 
-    return vec3{screen_x, screen_y, w};
+    return vec3{screen_x, screen_y, 1/w};
 };
 
 vec3 perspective_project(vec3& point) {

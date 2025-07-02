@@ -44,10 +44,15 @@ vector<RenderTri> convert_tris(deque<Object> world){
     for (Object obj : world){
         results = get_tris(obj);
         //Convert all to screenspace
-        for (RenderTri& triangle : results){
-            triangle.vertices.a = perspective_project(triangle.vertices.a);
-            triangle.vertices.b = perspective_project(triangle.vertices.b);
-            triangle.vertices.c = perspective_project(triangle.vertices.c);
+        for (int i=0;i<results.size();i++){
+            results[i].vertices.a = perspective_project(results[i].vertices.a);
+            results[i].uv_tri.a = results[i].uv_tri.a * results[i].vertices.a.z;
+
+            results[i].vertices.b = perspective_project(results[i].vertices.b);
+            results[i].uv_tri.b = results[i].uv_tri.b * results[i].vertices.b.z;
+
+            results[i].vertices.c = perspective_project(results[i].vertices.c);
+            results[i].uv_tri.c = results[i].uv_tri.c * results[i].vertices.c.z;
         };
         to_render.insert(to_render.end(), results.begin(), results.end());
     };
@@ -109,13 +114,13 @@ void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer
         tri3& current_tri = tris[i].vertices;
         //cout << (string) current_tri << endl;
         //If not back-face of tri
-        //if (cross_product_3_vectors(current_tri.a, current_tri.b, current_tri.c) <= 0) continue;
+        if (cross_product_3_vectors(current_tri.a, current_tri.b, current_tri.c) <= 0) continue;
         float min_y = min_bound_y(current_tri);
         float max_y = max_bound_y(current_tri);
         float min_x = min_bound_x(current_tri);
         float max_x = max_bound_x(current_tri);
         //If not contained in screen space, skip
-        //if (min_x > WIDTH || max_x < 0 || min_y > HEIGHT || max_y < 0) continue;
+        if (min_x > WIDTH || max_x < 0 || min_y > HEIGHT || max_y < 0) continue;
         float y;
         float x;
         float depth_percent;
@@ -131,12 +136,12 @@ void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer
                     depth = (barycentric_coords.x * current_tri.a.z) + (barycentric_coords.y * current_tri.b.z) + (barycentric_coords.z * current_tri.c.z);
                     //If new depth is closer to camera than the old depth, overwrite old depth and colour
                     buffer_depth = &depth_buffer->depth(static_cast<size_t>(x), static_cast<size_t>(y));
-                    if ((FRUSTRUM_DEPTH - depth) > *buffer_depth){
-                        depth_percent = 1-(depth/FRUSTRUM_DEPTH);
-                        *buffer_depth = FRUSTRUM_DEPTH - depth;
-                        vec2 texture_coordinate = barycentric_to_uv(barycentric_coords, base_tri);
+                    if ((FRUSTRUM_DEPTH - (1/depth)) > *buffer_depth){
+                        depth_percent = 1/((1/depth)/FRUSTRUM_DEPTH);
+                        *buffer_depth = FRUSTRUM_DEPTH - (1/depth);
+                        vec2 texture_coordinate = (barycentric_to_uv(barycentric_coords, base_tri)) / depth;
                         RGBA colour = tris[i].texture->el(rescale_int(texture_coordinate.x, 1, width), rescale_int(texture_coordinate.y, 1, height));
-                        image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour * depth_percent;
+                        image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour;// * depth_percent;
                     };
                 };
             };
