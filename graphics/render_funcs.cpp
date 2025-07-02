@@ -45,9 +45,9 @@ vector<RenderTri> convert_tris(deque<Object> world){
         results = get_tris(obj);
         //Convert all to screenspace
         for (RenderTri& triangle : results){
-            triangle.vertices.a = project_to_screen(triangle.vertices.a);
-            triangle.vertices.b = project_to_screen(triangle.vertices.b);
-            triangle.vertices.c = project_to_screen(triangle.vertices.c);
+            triangle.vertices.a = perspective_project(triangle.vertices.a);
+            triangle.vertices.b = perspective_project(triangle.vertices.b);
+            triangle.vertices.c = perspective_project(triangle.vertices.c);
         };
         to_render.insert(to_render.end(), results.begin(), results.end());
     };
@@ -100,19 +100,22 @@ float max_bound_y(tri3& triangle){
     return ceil(min(max(max(triangle.a.y,triangle.b.y), triangle.c.y), (float) WIDTH-1));
 };
 
-void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer* depth_buffer, SDL_Renderer *renderer){
+void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer* depth_buffer, SDL_Renderer* renderer){
     vec3 barycentric_coords;
     float depth;
     float *buffer_depth;
 
     for (int i=0; i<num_tris; i++) {
         tri3& current_tri = tris[i].vertices;
+        //cout << (string) current_tri << endl;
         //If not back-face of tri
-        if (cross_product_3_vectors(current_tri.a, current_tri.b, current_tri.c) <= 0) continue;
+        //if (cross_product_3_vectors(current_tri.a, current_tri.b, current_tri.c) <= 0) continue;
         float min_y = min_bound_y(current_tri);
         float max_y = max_bound_y(current_tri);
         float min_x = min_bound_x(current_tri);
         float max_x = max_bound_x(current_tri);
+        //If not contained in screen space, skip
+        //if (min_x > WIDTH || max_x < 0 || min_y > HEIGHT || max_y < 0) continue;
         float y;
         float x;
         float depth_percent;
@@ -139,7 +142,6 @@ void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer
             };
         };
     };
-    //delete texture?
 };
 
 SDL_RenderPackage SDL_Init_Main(){
@@ -183,9 +185,9 @@ void render(const SDL_RenderPackage& render_storage, deque<Object>& objects){
     black_screen(render_storage.image);
     black_buffer(render_storage.depth_buffer);
     if (objects.size() > 0){
-        //Get list of tris to render
+        //Vertex Shader
         vector<RenderTri> to_render = convert_tris(objects);
-        //Draw to screen
+        //Fragment Shader
         render_tris(to_render, to_render.size(), render_storage.image, render_storage.depth_buffer, render_storage.renderer);   
     };
 };

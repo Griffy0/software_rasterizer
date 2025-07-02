@@ -28,9 +28,9 @@ void move_helper(Object& obj){
     rotate_x(obj.rb.velocity.x*deltaTime, obj.ObjectSpace);
     
     //If on window border, bounce
-    if (obj.pos.x > WIDTH)  obj.rb.velocity.x = abs(obj.rb.velocity.x) * -1;
+    if (obj.pos.x > 10)  obj.rb.velocity.x = abs(obj.rb.velocity.x) * -1;
     if (obj.pos.x < 0)      obj.rb.velocity.x = abs(obj.rb.velocity.x);
-    if (obj.pos.y > HEIGHT) obj.rb.velocity.y = abs(obj.rb.velocity.y) * -1;
+    if (obj.pos.y > 10) obj.rb.velocity.y = abs(obj.rb.velocity.y) * -1;
     if (obj.pos.y < 0)      obj.rb.velocity.y = abs(obj.rb.velocity.y);
 };
 
@@ -67,15 +67,16 @@ int main(){
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
 
-    cout << "Converting Textures" << endl;
+    cout << "Loading Textures" << endl;
     map<string, Texture*> texture_map = load_textures();
 
     cout << "Generating Cubes" << endl;
     int num_cubes = randint(3,3);
     for (int i=0;i<num_cubes;i++){
-        add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["texture"]);
+        //add_cube(vec3{(float) randint(-5, 5), (float) randint(-5, 5), (float) randint(2, 5)}, (float) (randint(75,200)/100.0f), texture_map["texture"]);
     };
-    add_cube(vec3{(float) randint(0, WIDTH), (float) randint(0, HEIGHT), (float) randint(300, 500)}, (float) (randint(75,200)/100.0f), texture_map["default_texture"]);
+    add_cube(vec3{0.5,0,4}, 1.0f, texture_map["texture"]);
+    add_cube(vec3{1,0,2}, 1.0f, texture_map["texture"]);
 
     cout << "Started!" << endl << "=========" << endl << endl;
     
@@ -83,12 +84,11 @@ int main(){
     SDL_Event e;
     bool running = true;
     double runtime = 0;
-    float mouse_x;
+    /*float mouse_x;
     float mouse_y;
     vec3 mouse_pos;
     float distance;
-    float pull_strength = 300000.0f;
-    
+    float pull_strength = 300000.0f;*/
     // MAIN LOOP
     while (running && runtime < 100) {
         //Make this a check if running() func
@@ -106,12 +106,12 @@ int main(){
         //mouse_pos.y = HEIGHT - mouse_pos.y;
 
         //cout << mouse_pos.y << endl;
-
-
+        
         // UPDATE CODE GOES HERE
-        update_physics();
+        //update_physics();
         for (Object& obj : world) {
-            move_helper(obj);
+            rotate_x(30*deltaTime, obj.ObjectSpace);
+            //move_helper(obj);
             /*vec3 escape_vector = mouse_pos - obj.pos;
             escape_vector.z = 0;
             distance = escape_vector.magnitude() / 8;

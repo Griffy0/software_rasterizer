@@ -91,8 +91,34 @@ vec3 add_vec3(vec3 a, vec3 b){
     return vec3{a.x + b.x, a.y + b.y, a.z + b.z};
 };
 
-vec3 project_to_screen(vec3& point){
-    return point;//vec3{round(point.x)+0.5f, round(point.y)+0.5f, round(point.z)+0.5f};
+vec3 clip_to_screen(float x, float y, float z, float w){
+    float screen_x = ((x * WIDTH) / (2*w)) + WIDTH/2;
+    float screen_y = ((y * HEIGHT) / (2*w)) + HEIGHT/2;
+
+    return vec3{screen_x, screen_y, w};
+};
+
+vec3 perspective_project(vec3& point) {
+    //Perspective Projection
+    float distance = sqrt(pow(point.x, 2) + pow(point.y, 2) + pow(point.z, 2));
+    float x = point.x * zoom_x;
+    float y = point.y * zoom_y;
+    float z = (point.z * FRUSTRUM_DEPTH / (FRUSTRUM_DEPTH-FRUSTRUM_NEAR_DEPTH))
+            + (point.z * (-1*FRUSTRUM_DEPTH*FRUSTRUM_NEAR_DEPTH) / (FRUSTRUM_DEPTH-FRUSTRUM_NEAR_DEPTH));
+    float w = point.z;
+
+    return clip_to_screen(x,y,z,w);
+};
+
+vec3 orthographic_project(vec3& point) {
+    //Orthgographic Projection
+    float distance = sqrt(pow(point.x, 2) + pow(point.y, 2) + pow(point.z, 2));
+    float x = point.x * zoom_x;
+    float y = point.y * zoom_y;
+    float z = (point.z * FRUSTRUM_NEAR_DEPTH / (FRUSTRUM_NEAR_DEPTH-FRUSTRUM_DEPTH))
+            + (point.z * (FRUSTRUM_NEAR_DEPTH) / (FRUSTRUM_NEAR_DEPTH-FRUSTRUM_DEPTH));
+    
+    return clip_to_screen(x,y,z,1);
 };
 
 void rotate_x(double deg, Matrix_3x3& pos){

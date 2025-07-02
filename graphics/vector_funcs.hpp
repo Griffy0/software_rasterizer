@@ -28,9 +28,9 @@ Matrix_3x3 matrix_mul_3x3(Matrix_3x3& a, Matrix_3x3& b);
 vec3 mul_matrix3x3_vec3(Matrix_3x3& matrix, vec3& vec);
 
 vec3 add_vec3(vec3 a, vec3 b);
-
-vec3 project_to_screen(vec3& point);
-
+vec3 clip_to_screen(float x, float y, float z, float w);
+vec3 perspective_project(vec3& point);
+vec3 orthographic_project(vec3& point);
 void rotate_x(double deg, Matrix_3x3& pos);
 void rotate_y(double deg, Matrix_3x3& pos);
 void rotate_z(double deg, Matrix_3x3& pos);
