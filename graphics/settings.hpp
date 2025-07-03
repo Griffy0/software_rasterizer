@@ -3,7 +3,7 @@
 
 const size_t WIDTH = 640;
 const size_t HEIGHT = 640;
-const float FRUSTRUM_DEPTH = 700;
+const float FRUSTRUM_DEPTH = 10;
 const float FRUSTRUM_NEAR_DEPTH = 0.1f;
 const float FRUSTRUM_WIDTH = 2.0f;
 const float FRUSTRUM_HEIGHT = 2.0f;

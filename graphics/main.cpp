@@ -35,7 +35,7 @@ void move_helper(Object& obj){
 };
 
 void add_rigidbody(Object& obj, float mass){
-    obj.rb = Rigidbody{mass, 0, vec3{0,0,0}, vec3{0,0,0}, -98};
+    obj.rb = Rigidbody{mass, 0, vec3{0,0,0}, vec3{0,0,0}, -9.8};
     physics_objects.push_back(&obj);
 };
 
@@ -44,7 +44,7 @@ void update_physics(){
         Object& obj_reference = *obj;
         Rigidbody& rb = obj_reference.rb;
         rb.velocity = rb.velocity + (rb.accel * deltaTime);
-        rb.velocity.y += (rb.gravity * deltaTime);
+        //rb.velocity.y += (rb.gravity * deltaTime);
         //rb.velocity = rb.velocity - (rb.velocity * rb.drag * deltaTime); //not how this should work
         obj_reference.pos = obj_reference.pos + (rb.velocity * deltaTime);
     };
@@ -53,9 +53,19 @@ void update_physics(){
 void add_cube(vec3 pos, float size, Texture* texture){
     world.push_back(Object(pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
     world.back().ObjectSpace = scale(size, world.back().ObjectSpace);
-    world.back().mesh.texture = texture;
+    //world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
-    world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
+    //world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
+};
+
+vector<Object> add_grid(float x, float y, float z, vec3 pos, Texture* texture){
+    vector<Object> tiles;
+    for (float i=0;i<z;i++){
+        for (float j=0;j<x;j++){
+            tiles.push_back(Object(vec3{j, y, i}+pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
+        }
+    };
+    return tiles;
 };
 
 int main(){
@@ -75,9 +85,15 @@ int main(){
     for (int i=0;i<num_cubes;i++){
         //add_cube(vec3{(float) randint(-5, 5), (float) randint(-5, 5), (float) randint(2, 5)}, (float) (randint(75,200)/100.0f), texture_map["texture"]);
     };
-    add_cube(vec3{0.5,0,4}, 1.0f, texture_map["texture"]);
-    add_cube(vec3{1,0,2}, 1.0f, texture_map["texture"]);
-
+    Object parent = Object(vec3{0,0,3});
+    parent.children.push_back(Object{vec3{0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
+    parent.children.push_back(Object{vec3{-0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
+    //world.push_back(parent);
+    //add_cube(vec3{0.5,0,8}, 1.0f, texture_map["texture"]);
+    //add_cube(vec3{1,0,1}, 1.0f, texture_map["texture"]);
+    vector<Object> grid = add_grid(10, 0, 10, vec3{-5, -2, 5}, texture_map["texture"]);
+    world.insert(world.end(), grid.begin(), grid.end());
+    Camera camera = Camera{vec3{0,0,0}};
     cout << "Started!" << endl << "=========" << endl << endl;
     
     // INIT RUNTIME VARS
@@ -101,41 +117,22 @@ int main(){
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
         deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
-        //SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-        //mouse_pos.x = WIDTH - mouse_pos.x * 0.5f;
-        //mouse_pos.y = HEIGHT - mouse_pos.y;
-
-        //cout << mouse_pos.y << endl;
         
         // UPDATE CODE GOES HERE
-        //update_physics();
+        camera.pos.x += 1.0f * deltaTime;
+        update_physics();
         for (Object& obj : world) {
-            rotate_x(30*deltaTime, obj.ObjectSpace);
+            //rotate_x(30*deltaTime, obj.ObjectSpace);
+            //obj.ObjectSpace = obj.ObjectSpace * quaternion_to_matrix(euler_to_quaternion(vec3{static_cast<float>(deg_to_rad(30)*deltaTime), 0, 0}));
             //move_helper(obj);
-            /*vec3 escape_vector = mouse_pos - obj.pos;
-            escape_vector.z = 0;
-            distance = escape_vector.magnitude() / 8;
-            escape_vector.normalise();
-            obj.rb.AddForce(escape_vector * deltaTime * min(obj.rb.mass * (pull_strength / pow(distance, 2)), 2000.0));
-            */
-            //escape_vector = escape_vector * deltaTime;
-            //obj.rb.velocity = obj.rb.velocity + escape_vector;
         };
 
         // RENDER CODE
-        render(render_storage, world);
+        render(render_storage, world, camera);
         present(render_storage);
         update_fps(frame_counter);
         runtime += deltaTime;
-    };
-    
-    //cout << "Drawing" << endl;
-    //render(render_storage, world, texture);
-    //present(render_storage);
-
-    //cout << rescale_int(0.66f, 1, 9) << ' ' << rescale_int(0.67f, 1, 9) << endl;
-    //system("pause");
-    
+    };    
     SDL_Exit(render_storage);
     return 0;
 };

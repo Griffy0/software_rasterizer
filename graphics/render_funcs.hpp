@@ -8,7 +8,7 @@
 #include <SDL3/SDL.h>
 
 
-vector<RenderTri> get_tris(Object obj);
+vector<RenderTri> get_tris(Object obj, Object parent);
 vector<RenderTri> convert_tris(deque<Object> world);
 void black_screen(Image* img);
 void black_buffer(DepthBuffer* buffer);
@@ -21,5 +21,5 @@ float max_bound_y(tri3& triangle);
 void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer* depth_buffer, SDL_Renderer *renderer);
 SDL_RenderPackage SDL_Init_Main();
 void SDL_Exit(SDL_RenderPackage render_storage);
-void render(const SDL_RenderPackage& render_storage, deque<Object>& objects);
+void render(const SDL_RenderPackage& render_storage, deque<Object>& objects, Camera camera);
 void present(const SDL_RenderPackage& render_storage);

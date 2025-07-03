@@ -47,7 +47,7 @@ vec3 to_barycentric(const vec2& point, const tri3& triangle){
 vec2 barycentric_to_uv(const vec3& barycentric, const tri& triangle){
     float uv_x = barycentric.x * triangle.a.x + barycentric.y * triangle.b.x + barycentric.z * triangle.c.x;
     float uv_y = barycentric.x * triangle.a.y + barycentric.y * triangle.b.y + barycentric.z * triangle.c.y;
-    return vec2{uv_x, uv_y};
+    return vec2{max(min(uv_x, 1.0f), 0.0f), max(min(uv_y, 1.0f), 0.0f)};
 };
 
 bool cross_product_3_vectors(const vec3& a, const vec3& b, const vec3& c){
@@ -81,7 +81,7 @@ Matrix_3x3 matrix_mul_3x3(Matrix_3x3& a, Matrix_3x3& b){
     };
 };
 
-vec3 mul_matrix3x3_vec3(Matrix_3x3& matrix, vec3& vec){
+vec3 mul_matrix3x3_vec3(Matrix_3x3& matrix, vec3 vec){
     return vec3{vec.x * matrix.el(0,0) + vec.y * matrix.el(1,0) + vec.z * matrix.el(2,0),
                 vec.x * matrix.el(0,1) + vec.y * matrix.el(1,1) + vec.z * matrix.el(2,1),
                 vec.x * matrix.el(0,2) + vec.y * matrix.el(1,2) + vec.z * matrix.el(2,2)};
@@ -162,5 +162,32 @@ Matrix_3x3 scale(float scalar, Matrix_3x3& matrix){
         matrix.el(0,2) * scalar,
         matrix.el(1,2) * scalar,
         matrix.el(2,2) * scalar,
+    };
+};
+
+Quaternion euler_to_quaternion(vec3 euler){
+    return Quaternion {
+        cos(euler.x/2.0f)*cos(euler.y/2.0f)*cos(euler.z/2.0f)+sin(euler.x/2.0f)*sin(euler.y/2.0f)*sin(euler.z/2.0f),
+        vec3{
+            (-1.0f)*cos(euler.x/2.0f)*sin(euler.y/2.0f)*cos(euler.z/2.0f)-sin(euler.x/2.0f)*cos(euler.y/2.0f)*sin(euler.z/2.0f),
+            cos(euler.x/2.0f)*sin(euler.y/2.0f)*sin(euler.z/2.0f)-sin(euler.x/2.0f)*cos(euler.y/2.0f)*cos(euler.z/2.0f),
+            sin(euler.x/2.0f)*sin(euler.y/2.0f)*cos(euler.z/2.0f)-cos(euler.x/2.0f)*cos(euler.y/2.0f)*sin(euler.z/2.0f)
+        }
+    };
+};
+
+Matrix_3x3 quaternion_to_matrix(Quaternion quaternion){
+    return Matrix_3x3{
+        1.0f-(2.0f*pow(quaternion.v.y,2.0f))-(2.0f*pow(quaternion.v.z,2.0f)),
+        2.0f*quaternion.v.x*quaternion.v.y + 2.0f*quaternion.w*quaternion.v.z,
+        2.0f*quaternion.v.x*quaternion.v.z - 2.0f*quaternion.w*quaternion.v.y,
+
+        2.0f*quaternion.v.x*quaternion.v.y - 2.0f*quaternion.w*quaternion.v.z,
+        1.0f-(2.0f*pow(quaternion.v.x,2.0f))-(2.0f*pow(quaternion.v.z,2.0f)),
+        2.0f*quaternion.v.y*quaternion.v.z + 2.0f*quaternion.w*quaternion.v.x,
+
+        2.0f*quaternion.v.x*quaternion.v.z + 2.0f*quaternion.w*quaternion.v.y,
+        2.0f*quaternion.v.y*quaternion.v.z - 2.0f*quaternion.w*quaternion.v.x,
+        1.0f-(2.0f*pow(quaternion.v.x,2.0f))-(2.0f*pow(quaternion.v.y,2.0f))
     };
 };

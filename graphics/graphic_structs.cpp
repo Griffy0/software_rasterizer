@@ -112,6 +112,22 @@ tri3::operator string() const {
     return "(" + (string) a + ", " + (string) b + ", " + (string) c + ")";
 };
 
+Matrix_3x3 Matrix_3x3::operator * (Matrix_3x3 b) {
+    return Matrix_3x3{
+        this->el(0,0)*b.el(0,0) + this->el(1,0)*b.el(0,1) + this->el(2,0)*b.el(0,2),
+        this->el(0,0)*b.el(1,0) + this->el(1,0)*b.el(1,1) + this->el(2,0)*b.el(1,2),
+        this->el(0,0)*b.el(2,0) + this->el(1,0)*b.el(2,1) + this->el(2,0)*b.el(2,2),
+
+        this->el(0,1)*b.el(0,0) + this->el(1,1)*b.el(0,1) + this->el(2,1)*b.el(0,2),
+        this->el(0,1)*b.el(1,0) + this->el(1,1)*b.el(1,1) + this->el(2,1)*b.el(1,2),
+        this->el(0,1)*b.el(2,0) + this->el(1,1)*b.el(2,1) + this->el(2,1)*b.el(2,2),
+
+        this->el(0,2)*b.el(0,0) + this->el(1,2)*b.el(0,1) + this->el(2,2)*b.el(0,2),
+        this->el(0,2)*b.el(1,0) + this->el(1,2)*b.el(1,1) + this->el(2,2)*b.el(1,2),
+        this->el(0,2)*b.el(2,0) + this->el(1,2)*b.el(2,1) + this->el(2,2)*b.el(2,2)
+    };
+};
+
 void Rigidbody::AddForce(vec3 force){
     //accel = accel + (force / mass);
     velocity = velocity + (force / mass);

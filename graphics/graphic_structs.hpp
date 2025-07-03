@@ -101,6 +101,7 @@ struct UVMesh{
 struct Matrix_3x3{
     float table[9]; 
     float& el(size_t w, size_t h) { return table[h * 3 + w]; };
+    Matrix_3x3 operator * (Matrix_3x3 b) ;
 };
 
 class poly {
@@ -148,7 +149,18 @@ class Object {
         vector<Object> children;
         vector<Component> components;
         Rigidbody rb;
-        Object(vec3 position, TriangleMesh tri_mesh = {vector<tri3>(), vector<tri>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
+        Object(vec3 position = {0,0,0}, TriangleMesh tri_mesh = {vector<tri3>(), vector<tri>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
+};
+
+struct Quaternion {
+    float w;
+    vec3 v;
+};
+
+struct Camera {
+    vec3 pos;
+    Quaternion rot;
+    float fov;
 };
 
 struct SDL_RenderPackage {

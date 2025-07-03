@@ -6,7 +6,7 @@
 #include "settings.hpp"
 #include <SDL3/SDL.h>
 
-vector<RenderTri> get_tris(Object obj){
+vector<RenderTri> get_tris(Object obj, Object parent){
     //Use tail end recursion to get all children
     vector<RenderTri> converted_coords;
     vector<RenderTri> results;
@@ -17,7 +17,8 @@ vector<RenderTri> get_tris(Object obj){
             //mul x y z by the obj coordinate space matrix
             converted_coords.push_back(
                 RenderTri{
-                    tri3{add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].a), obj.pos),
+                    tri3{
+                        add_vec3(mul_matrix3x3_vec3(parent.ObjectSpace, add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].a), obj.pos)), parent.pos),
                         add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].b), obj.pos),
                         add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].c), obj.pos)
                     },
@@ -32,25 +33,29 @@ vector<RenderTri> get_tris(Object obj){
         return converted_coords;
     };
     for (Object child : obj.children){
-        results = get_tris(child);
+        results = get_tris(child, obj);
         converted_coords.insert(converted_coords.end(), results.begin(), results.end());
     };
     return converted_coords;
 };
 
-vector<RenderTri> convert_tris(deque<Object> world){
+vector<RenderTri> convert_tris(deque<Object> world, Camera camera){
     vector<RenderTri> to_render;
     vector<RenderTri> results;
     for (Object obj : world){
-        results = get_tris(obj);
+        Object empty = Object();
+        results = get_tris(obj, empty);
         //Convert all to screenspace
         for (int i=0;i<results.size();i++){
+            results[i].vertices.a = results[i].vertices.a - camera.pos;
             results[i].vertices.a = perspective_project(results[i].vertices.a);
             results[i].uv_tri.a = results[i].uv_tri.a * results[i].vertices.a.z;
 
+            results[i].vertices.b = results[i].vertices.b - camera.pos;
             results[i].vertices.b = perspective_project(results[i].vertices.b);
             results[i].uv_tri.b = results[i].uv_tri.b * results[i].vertices.b.z;
 
+            results[i].vertices.c = results[i].vertices.c - camera.pos;
             results[i].vertices.c = perspective_project(results[i].vertices.c);
             results[i].uv_tri.c = results[i].uv_tri.c * results[i].vertices.c.z;
         };
@@ -136,9 +141,12 @@ void render_tris(vector<RenderTri> tris, int num_tris, Image* image, DepthBuffer
                     depth = (barycentric_coords.x * current_tri.a.z) + (barycentric_coords.y * current_tri.b.z) + (barycentric_coords.z * current_tri.c.z);
                     //If new depth is closer to camera than the old depth, overwrite old depth and colour
                     buffer_depth = &depth_buffer->depth(static_cast<size_t>(x), static_cast<size_t>(y));
-                    if ((FRUSTRUM_DEPTH - (1/depth)) > *buffer_depth){
-                        depth_percent = 1/((1/depth)/FRUSTRUM_DEPTH);
-                        *buffer_depth = FRUSTRUM_DEPTH - (1/depth);
+                    //Theres an issue with floating point relating to depths
+                    //The top pixel of the side of a cube can overwrite the top pixel of the top of an adjacent cube 
+                    if (depth > *buffer_depth){
+                        //depth_percent = 1-(depth-FRUSTRUM_NEAR_DEPTH)/(FRUSTRUM_DEPTH-FRUSTRUM_NEAR_DEPTH);
+                        //cout << depth_percent << endl;
+                        *buffer_depth = depth;
                         vec2 texture_coordinate = (barycentric_to_uv(barycentric_coords, base_tri)) / depth;
                         RGBA colour = tris[i].texture->el(rescale_int(texture_coordinate.x, 1, width), rescale_int(texture_coordinate.y, 1, height));
                         image->pixel(static_cast<size_t>(x), static_cast<size_t>(y)) = colour;// * depth_percent;
@@ -185,13 +193,13 @@ void SDL_Exit(SDL_RenderPackage render_storage){
     SDL_Quit();
 }
 
-void render(const SDL_RenderPackage& render_storage, deque<Object>& objects){
+void render(const SDL_RenderPackage& render_storage, deque<Object>& objects, Camera camera){
     //Empty the depth and colour buffers
     black_screen(render_storage.image);
     black_buffer(render_storage.depth_buffer);
     if (objects.size() > 0){
         //Vertex Shader
-        vector<RenderTri> to_render = convert_tris(objects);
+        vector<RenderTri> to_render = convert_tris(objects, camera);
         //Fragment Shader
         render_tris(to_render, to_render.size(), render_storage.image, render_storage.depth_buffer, render_storage.renderer);   
     };
