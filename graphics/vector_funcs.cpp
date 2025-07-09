@@ -151,17 +151,17 @@ void rotate_z(double deg, Matrix_3x3& pos){
     pos = matrix_mul_3x3(rot_matrix, pos);
 };
 
-Matrix_3x3 scale(float scalar, Matrix_3x3& matrix){ 
+Matrix_3x3 scale(vec3 vec, Matrix_3x3& matrix){ 
     return Matrix_3x3{
-        matrix.el(0,0) * scalar,
-        matrix.el(1,0) * scalar,
-        matrix.el(2,0) * scalar,
-        matrix.el(0,1) * scalar,
-        matrix.el(1,1) * scalar,
-        matrix.el(2,1) * scalar,
-        matrix.el(0,2) * scalar,
-        matrix.el(1,2) * scalar,
-        matrix.el(2,2) * scalar,
+        matrix.el(0,0) * vec.x,
+        matrix.el(1,0) * vec.x,
+        matrix.el(2,0) * vec.x,
+        matrix.el(0,1) * vec.y,
+        matrix.el(1,1) * vec.y,
+        matrix.el(2,1) * vec.y,
+        matrix.el(0,2) * vec.z,
+        matrix.el(1,2) * vec.z,
+        matrix.el(2,2) * vec.z,
     };
 };
 

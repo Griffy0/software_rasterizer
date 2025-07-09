@@ -42,22 +42,24 @@ vector<RenderTri> get_tris(Object obj, Object parent){
 vector<RenderTri> convert_tris(deque<Object> world, Camera camera){
     vector<RenderTri> to_render;
     vector<RenderTri> results;
+    Matrix_3x3 cam_rot_matrix = quaternion_to_matrix(camera.rot);
     for (Object obj : world){
         Object empty = Object();
         results = get_tris(obj, empty);
         //Convert all to screenspace
+        //mul_matrix3x3_vec3(cam_rot_matrix, (results[i].vertices.a - camera.pos));
         for (int i=0;i<results.size();i++){
             results[i].vertices.a = results[i].vertices.a - camera.pos;
             results[i].vertices.a = perspective_project(results[i].vertices.a);
-            results[i].uv_tri.a = results[i].uv_tri.a * results[i].vertices.a.z;
+            results[i].uv_tri.a   = results[i].uv_tri.a * results[i].vertices.a.z;
 
             results[i].vertices.b = results[i].vertices.b - camera.pos;
             results[i].vertices.b = perspective_project(results[i].vertices.b);
-            results[i].uv_tri.b = results[i].uv_tri.b * results[i].vertices.b.z;
+            results[i].uv_tri.b   = results[i].uv_tri.b * results[i].vertices.b.z;
 
             results[i].vertices.c = results[i].vertices.c - camera.pos;
             results[i].vertices.c = perspective_project(results[i].vertices.c);
-            results[i].uv_tri.c = results[i].uv_tri.c * results[i].vertices.c.z;
+            results[i].uv_tri.c   = results[i].uv_tri.c * results[i].vertices.c.z;
         };
         to_render.insert(to_render.end(), results.begin(), results.end());
     };

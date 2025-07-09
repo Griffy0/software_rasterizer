@@ -25,6 +25,6 @@ vec3 orthographic_project(vec3& point);
 void rotate_x(double deg, Matrix_3x3& pos);
 void rotate_y(double deg, Matrix_3x3& pos);
 void rotate_z(double deg, Matrix_3x3& pos);
-Matrix_3x3 scale(float scalar, Matrix_3x3& matrix);
+Matrix_3x3 scale(vec3 scalar, Matrix_3x3& matrix);
 Quaternion euler_to_quaternion(vec3 euler);
 Matrix_3x3 quaternion_to_matrix(Quaternion quaternion);

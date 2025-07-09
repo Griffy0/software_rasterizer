@@ -35,6 +35,8 @@ bool load_bmp_24(const char* filename, Texture* out_texture) {
     //    std::cerr << "Unsupported BMP format (must be 32x48, 24-bit).\n";
     //    return false;
     //}
+    cout << "Texture: " << filename << endl;
+    cout << "Dimensions: " << bmp_width << "x" << bmp_height << endl;
     out_texture->height = bmp_height;
     out_texture->width = bmp_width;
     out_texture->coordinate = new RGBA[bmp_height*bmp_width];

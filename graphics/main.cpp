@@ -50,12 +50,27 @@ void update_physics(){
     };
 };
 
-void add_cube(vec3 pos, float size, Texture* texture){
+void add_cube(vec3 pos, vec3 size, Texture* texture){
     world.push_back(Object(pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
     world.back().ObjectSpace = scale(size, world.back().ObjectSpace);
     //world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
     //world.back().rb.AddForce(vec3{(float) (randint(600,1000)*((2*randint(0,1))-1)), (float) (randint(600,1000)*((2*randint(0,1))-1)), 0});
+};
+
+vector<Object> add_two_colour_grid(float x, float y, float z, vec3 pos, Texture* texture, Texture* texture2){
+    vector<Object> tiles;
+    for (int i=0;i<z;i++){
+        for (int j=0;j<x;j++){
+            if (((i+j) % 2) == 0){
+                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
+            }
+            else {
+                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tris,cube.uvs,texture2}, cube_uvs));
+            };
+        }
+    };
+    return tiles;
 };
 
 vector<Object> add_grid(float x, float y, float z, vec3 pos, Texture* texture){
@@ -89,25 +104,23 @@ int main(){
     parent.children.push_back(Object{vec3{0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
     parent.children.push_back(Object{vec3{-0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
     //world.push_back(parent);
-    //add_cube(vec3{0.5,0,8}, 1.0f, texture_map["texture"]);
-    //add_cube(vec3{1,0,1}, 1.0f, texture_map["texture"]);
-    vector<Object> grid = add_grid(10, 0, 10, vec3{-5, -2, 5}, texture_map["texture"]);
+    //add_cube(vec3{0,0,4}, vec3{1, 1, 1}, texture_map["texture"]);
+    //add_cube(vec3{1,0,4}, vec3{1, 1, 1}, texture_map["stone"]);
+
+    vector<Object> grid = add_two_colour_grid(10, 0, 10, vec3{-5, -2, 5}, texture_map["texture"], texture_map["stone"]);
+
     world.insert(world.end(), grid.begin(), grid.end());
-    Camera camera = Camera{vec3{0,0,0}};
+    Camera camera = Camera{vec3{0,0,0}, euler_to_quaternion(vec3{static_cast<float>(deg_to_rad(30)),0,0})};
     cout << "Started!" << endl << "=========" << endl << endl;
     
     // INIT RUNTIME VARS
     SDL_Event e;
     bool running = true;
     double runtime = 0;
-    /*float mouse_x;
-    float mouse_y;
-    vec3 mouse_pos;
-    float distance;
-    float pull_strength = 300000.0f;*/
+
     // MAIN LOOP
     while (running && runtime < 100) {
-        //Make this a check if running() func
+        // Make this a check if running() func
         // Kill program when quit pressed
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) {
@@ -134,5 +147,8 @@ int main(){
         runtime += deltaTime;
     };    
     SDL_Exit(render_storage);
+    for (pair<string, Texture*> texture : texture_map){
+        delete texture.second;
+    };
     return 0;
 };
