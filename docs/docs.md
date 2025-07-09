@@ -23,8 +23,7 @@
 
     **\*** (**vec3** this, **vec3** b)
     - Multiplies each x, y, and z value into a new **vec3**
-    - $$vec3(x,y,z) = (this.x*b.x, this.y*b.y, this.z*b.z)$$
-
+    - $$vec3(x,y,z) = (this.x \times b.x, this.y \times b.y, this.z \times b.z)$$
         
     **/** (**vec3** this, **vec3** b)
     - Divides each x, y, and z value into a new **vec3**
@@ -45,7 +44,7 @@
 
     **\*** (**vec3** this, **float** scalar)
     - Non-Mutative
-    - $$vec3(x,y,z) = (this.x*scalar, this.y*scalar, this.z*scalar)$$
+    - $$vec3(x,y,z) = (this.x \times scalar, this.y \times scalar, this.z \times scalar)$$
     <br>
 
     **/** (**vec3** this, **float** scalar)
