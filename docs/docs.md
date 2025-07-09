@@ -15,42 +15,42 @@
     ### vec3 x vec3
     **\+** (**vec3** this, **vec3** b)
     - Adds each x, y, and z value into a new **vec3**
-    $$vec3(x,y,z) = (this.x+b.x, this.y+b.y, this.z+b.z)$$
+    - $$vec3(x,y,z) = (this.x+b.x, this.y+b.y, this.z+b.z)$$
 
     **\-** (**vec3** this, **vec3** b)
     - Subtracts each x, y, and z value into a new **vec3**
-    $$vec3(x,y,z) = (this.x-b.x, this.y-b.y, this.z-b.z)$$
+    - $$vec3(x,y,z) = (this.x-b.x, this.y-b.y, this.z-b.z)$$
 
     **\*** (**vec3** this, **vec3** b)
     - Multiplies each x, y, and z value into a new **vec3**
-    $$vec3(x,y,z) = (this.x*b.x, this.y*b.y, this.z*b.z)$$
+    - $$vec3(x,y,z) = (this.x*b.x, this.y*b.y, this.z*b.z)$$
 
         
     **/** (**vec3** this, **vec3** b)
     - Divides each x, y, and z value into a new **vec3**
-    $$vec3(x,y,z) = (\frac{this.x}{b.x}, \frac{this.y}{b.y}, \frac{this.z}{b.z})$$
+    - $$vec3(x,y,z) = (\frac{this.x}{b.x}, \frac{this.y}{b.y}, \frac{this.z}{b.z})$$
     
     <br>
 
     ### vec3 x float
     **\+** (**vec3** this, **float** scalar)
     - Creates a new **vec3** with x, y, and z incremented by float
-    $$vec3(x,y,z) = (this.x+scalar, this.y+scalar, this.z+scalar)$$
+    - $$vec3(x,y,z) = (this.x+scalar, this.y+scalar, this.z+scalar)$$
     <br>
 
     **\-** (**vec3** this, **float** scalar)
     - Creates a new **vec3** with x, y, and z decremented by float
-    $$vec3(x,y,z) = (this.x-scalar, this.y-scalar, this.z-scalar)$$
+    - $$vec3(x,y,z) = (this.x-scalar, this.y-scalar, this.z-scalar)$$
     <br>
 
     **\*** (**vec3** this, **float** scalar)
     - Non-Mutative
-    $$vec3(x,y,z) = (this.x*scalar, this.y*scalar, this.z*scalar)$$
+    - $$vec3(x,y,z) = (this.x*scalar, this.y*scalar, this.z*scalar)$$
     <br>
 
     **/** (**vec3** this, **float** scalar)
     - Non-Mutative
-    $$vec3(x,y,z) = (\frac{this.x}{scalar}, \frac{this.y}{scalar}, \frac{this.z}{scalar})$$
+    - $$vec3(x,y,z) = (\frac{this.x}{scalar}, \frac{this.y}{scalar}, \frac{this.z}{scalar})$$
 
     <br>
 
@@ -58,12 +58,12 @@
 
     float **magnitude**()
     - Returns the the length of the vector using the Pythagorean Theorum
-    $$magnitude = \sqrt{x^2 + y^2 + z^2}$$
+    - $$magnitude = \sqrt{x^2 + y^2 + z^2}$$
 
     void **normalise**()
     - Normalises the vector
     - Mutative
-    $$this = (\frac{this.x}{magnitude}, \frac{this.y}{magnitude}, \frac{this.z}{magnitude})$$
+    - $$this = (\frac{this.x}{magnitude}, \frac{this.y}{magnitude}, \frac{this.z}{magnitude})$$
 
     (string)
     - Returns the vector as a string in format ({x}, {y}, {z})
