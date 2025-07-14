@@ -28,15 +28,17 @@ vec2 vec2::operator / (float scalar) const {
 };
 
 
-void vec3::normalise(){
-    float euclid_norm = static_cast<float>(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
-    x /= euclid_norm;
-    y /= euclid_norm;
-    z /= euclid_norm;
-};
+
 
 float vec3::magnitude(){
     return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+};
+
+void vec3::normalise(){
+    float euclid_norm = this->magnitude();
+    x /= euclid_norm;
+    y /= euclid_norm;
+    z /= euclid_norm;
 };
 
 vec3 vec3::operator + (vec3 other) const {

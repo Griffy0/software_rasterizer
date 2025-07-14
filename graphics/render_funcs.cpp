@@ -10,17 +10,20 @@ vector<RenderTri> get_tris(Object obj, Object parent){
     //Use tail end recursion to get all children
     vector<RenderTri> converted_coords;
     vector<RenderTri> results;
-    uint16_t size = obj.mesh.tris.size();
+    uint16_t size = obj.mesh.tri_indices.size();
     if (size > 0){
-        for (int i=0;i<size;i++){
+        int i = -1;
+        for (array<int, 3> arr : obj.mesh.tri_indices){
+            i ++;
             //RenderTri i : obj.mesh.tris
             //mul x y z by the obj coordinate space matrix
             converted_coords.push_back(
                 RenderTri{
                     tri3{
-                        add_vec3(mul_matrix3x3_vec3(parent.ObjectSpace, add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].a), obj.pos)), parent.pos),
-                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].b), obj.pos),
-                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].c), obj.pos)
+                        //add_vec3(mul_matrix3x3_vec3(parent.ObjectSpace, add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.tris[i].a), obj.pos)), parent.pos),
+                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.vertices[arr[0]]), obj.pos),
+                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.vertices[arr[1]]), obj.pos),
+                        add_vec3(mul_matrix3x3_vec3(obj.ObjectSpace, obj.mesh.vertices[arr[2]]), obj.pos)
                     },
                     obj.mesh.uvs[i],
                     obj.mesh.texture

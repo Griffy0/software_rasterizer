@@ -14,6 +14,7 @@
 #include "useful_template_structs.hpp"
 #include "fps_counter.hpp"
 #include "bmp_reader.hpp"
+#include "obj_reader.hpp"
 #include "settings.hpp"
 using namespace std;
 
@@ -51,7 +52,7 @@ void update_physics(){
 };
 
 void add_cube(vec3 pos, vec3 size, Texture* texture){
-    world.push_back(Object(pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
+    world.push_back(Object(pos, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs,texture}, cube_uvs));
     world.back().ObjectSpace = scale(size, world.back().ObjectSpace);
     //world.back().mesh.texture = texture;
     add_rigidbody(world.back(), 10);
@@ -63,10 +64,10 @@ vector<Object> add_two_colour_grid(float x, float y, float z, vec3 pos, Texture*
     for (int i=0;i<z;i++){
         for (int j=0;j<x;j++){
             if (((i+j) % 2) == 0){
-                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
+                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs, texture}, cube_uvs));
             }
             else {
-                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tris,cube.uvs,texture2}, cube_uvs));
+                tiles.push_back(Object(vec3{static_cast<float>(j), y, static_cast<float>(i)}+pos, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs, texture2}, cube_uvs));
             };
         }
     };
@@ -77,7 +78,7 @@ vector<Object> add_grid(float x, float y, float z, vec3 pos, Texture* texture){
     vector<Object> tiles;
     for (float i=0;i<z;i++){
         for (float j=0;j<x;j++){
-            tiles.push_back(Object(vec3{j, y, i}+pos, TriangleMesh{cube.tris,cube.uvs,texture}, cube_uvs));
+            tiles.push_back(Object(vec3{j, y, i}+pos, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs, texture}, cube_uvs));
         }
     };
     return tiles;
@@ -101,8 +102,8 @@ int main(){
         //add_cube(vec3{(float) randint(-5, 5), (float) randint(-5, 5), (float) randint(2, 5)}, (float) (randint(75,200)/100.0f), texture_map["texture"]);
     };
     Object parent = Object(vec3{0,0,3});
-    parent.children.push_back(Object{vec3{0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
-    parent.children.push_back(Object{vec3{-0.5f, 0, 1}, TriangleMesh{cube.tris,cube.uvs,texture_map["texture"]}, cube_uvs});
+    parent.children.push_back(Object{vec3{0.5f, 0, 1}, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs, texture_map["texture"]}});
+    parent.children.push_back(Object{vec3{-0.5f, 0, 1}, TriangleMesh{cube.tri_indices, cube.vertices, cube.uvs, texture_map["texture"]}});
     //world.push_back(parent);
     //add_cube(vec3{0,0,4}, vec3{1, 1, 1}, texture_map["texture"]);
     //add_cube(vec3{1,0,4}, vec3{1, 1, 1}, texture_map["stone"]);

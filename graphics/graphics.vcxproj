@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -152,6 +152,7 @@
     <ClCompile Include="math_helpers.cpp" />
     <ClCompile Include="math_helpers.hpp" />
     <ClCompile Include="bmp_reader.cpp" />
+    <ClCompile Include="obj_reader.cpp" />
     <ClCompile Include="render_funcs.cpp" />
     <ClCompile Include="vector_funcs.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="fps_counter.hpp" />
     <ClInclude Include="graphic_structs.hpp" />
     <ClInclude Include="bmp_reader.hpp" />
+    <ClInclude Include="obj_reader.hpp" />
     <ClInclude Include="settings.hpp" />
     <ClInclude Include="useful_template_structs.hpp" />
     <ClInclude Include="render_funcs.hpp" />

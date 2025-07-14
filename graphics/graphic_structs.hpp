@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <vector>
+#include <array>
 #include <SDL3/SDL.h>
 #include "settings.hpp"
 using namespace std;
@@ -22,8 +23,9 @@ struct vec3 {
     float y;
     float z;
     operator string() const;
-    void normalise();
     float magnitude();
+    void normalise();
+
     vec3 operator + (vec3 other) const;
     vec3 operator + (float scalar) const;
     vec3 operator - (vec3 other) const;
@@ -35,9 +37,9 @@ struct vec3 {
 };
 
 struct RGB {
-    uint8_t b;
-    uint8_t g;
     uint8_t r;
+    uint8_t g;
+    uint8_t b;
 };
 struct RGBA {
     uint8_t r;
@@ -82,7 +84,8 @@ struct TriangleMesh{
 
     int tri_count;
     TriIndices *tri_indices;*/
-    vector<tri3> tris;
+    vector<array<int, 3>> tri_indices;
+    vector<vec3> vertices;
     vector<tri> uvs;
     Texture* texture;
     
@@ -149,7 +152,7 @@ class Object {
         vector<Object> children;
         vector<Component> components;
         Rigidbody rb;
-        Object(vec3 position = {0,0,0}, TriangleMesh tri_mesh = {vector<tri3>(), vector<tri>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
+        Object(vec3 position = {0,0,0}, TriangleMesh tri_mesh = {vector<array<int, 3>>(), vector<vec3>(), vector<tri>()}, UVMesh uvs = {vector<tri>()}, Matrix_3x3 space = Matrix_3x3{1,0,0, 0,1,0, 0,0,1});
 };
 
 struct Quaternion {
